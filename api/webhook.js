@@ -41,13 +41,16 @@ module.exports = async (req, res) => {
       }
     }
 
+    let gateway = 'unknown';
     if (transaction) {
       transactionId = transaction.id ? String(transaction.id) : 'unknown';
       paymentId = transaction.payment_id || (transaction.receipt && transaction.receipt.payment_id) || 'unknown';
+      gateway = transaction.gateway || 'unknown';
     } else if (order.payment_gateway_names) {
       paymentId = order.payment_gateway_names[0];
+      gateway = order.payment_gateway_names[0];
     }
-    console.log('Order ID:', orderId, 'Transaction ID:', transactionId, 'Payment ID:', paymentId);
+    console.log('Order ID:', orderId, 'Transaction ID:', transactionId, 'Payment ID:', paymentId, 'Gateway:', gateway);
 
     // Save both metafields
     const metafields = [
@@ -61,6 +64,12 @@ module.exports = async (req, res) => {
         namespace: 'custom',
         key: 'paymentid',
         value: paymentId,
+        type: 'single_line_text_field'
+      },
+      {
+        namespace: 'custom',
+        key: 'payment_gateway',
+        value: gateway,
         type: 'single_line_text_field'
       }
     ];
