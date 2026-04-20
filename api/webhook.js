@@ -10,7 +10,13 @@ module.exports = async (req, res) => {
     // Vercel parses JSON body automatically
     const order = req.body;
     console.log('Order payload:', order);
-    const paymentId = order.payment_gateway_names ? order.payment_gateway_names[0] : 'unknown';
+    // Extract unique payment/transaction id
+    let paymentId = 'unknown';
+    if (order.transactions && Array.isArray(order.transactions) && order.transactions.length > 0) {
+      paymentId = order.transactions[0].id ? String(order.transactions[0].id) : 'unknown';
+    } else if (order.payment_gateway_names) {
+      paymentId = order.payment_gateway_names[0];
+    }
     const orderId = order.id;
     console.log('Order ID:', orderId, 'Payment ID:', paymentId);
 
