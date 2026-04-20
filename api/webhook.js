@@ -9,7 +9,8 @@ module.exports = async (req, res) => {
   try {
     // Vercel parses JSON body automatically
     const order = req.body;
-    console.log('Order payload:', order);
+    // Log the full order payload as formatted JSON
+    console.log('Full order payload:', JSON.stringify(order, null, 2));
     // Extract unique payment/transaction id
     let paymentId = 'unknown';
     const orderId = order.id;
