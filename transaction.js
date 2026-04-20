@@ -23,8 +23,13 @@ const server = http.createServer(async (req, res) => {
 			try {
 				console.log('Raw body:', body);
 				const order = JSON.parse(body);
-				// Extract payment info (customize as needed)
-				const paymentId = order.payment_gateway_names ? order.payment_gateway_names[0] : 'unknown';
+				// Extract unique payment/transaction id
+				let paymentId = 'unknown';
+				if (order.transactions && Array.isArray(order.transactions) && order.transactions.length > 0) {
+					paymentId = order.transactions[0].id ? String(order.transactions[0].id) : 'unknown';
+				} else if (order.payment_gateway_names) {
+					paymentId = order.payment_gateway_names[0];
+				}
 				const orderId = order.id;
 				console.log('Order ID:', orderId, 'Payment ID:', paymentId);
 
