@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
           }
         );
         const txData = await txResp.json();
+        console.log('Full transactions.json response:', JSON.stringify(txData, null, 2));
         if (txData.transactions && txData.transactions.length > 0) {
           paymentId = txData.transactions[0].id ? String(txData.transactions[0].id) : 'unknown';
         } else if (order.payment_gateway_names) {
